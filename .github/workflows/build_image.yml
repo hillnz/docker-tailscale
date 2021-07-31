@@ -34,6 +34,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Fetch tailscale code and read version
+        id: get_tailscale
         run: |
           wget "https://github.com/tailscale/tailscale/archive/refs/tags/${{ env.TAILSCALE_VERSION }}.tar.gz"
           mkdir tailscale
@@ -52,9 +53,9 @@ jobs:
           file: ./tailscale/Dockerfile
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           build-args: |
-            VERSION_LONG=${{ env.VERSION_LONG }}
-            VERSION_SHORT=${{ env.VERSION_SHORT }}
-            VERSION_GIT_HASH=${{ env.VERSION_GIT_HASH }}
+            VERSION_LONG=${{ steps.get_tailscale.outputs.VERSION_LONG }}
+            VERSION_SHORT=${{ steps.get_tailscale.outputs.VERSION_SHORT }}
+            VERSION_GIT_HASH=${{ steps.get_tailscale.outputs.VERSION_GIT_HASH }}
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: "${{ env.DOCKER_REPO }}:${{ env.TAILSCALE_VERSION }},${{ env.DOCKER_REPO }}:latest"
 
