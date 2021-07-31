@@ -36,10 +36,9 @@ jobs:
       - name: Fetch tailscale code and read version
         id: get_tailscale
         run: |
-          wget "https://github.com/tailscale/tailscale/archive/refs/tags/${{ env.TAILSCALE_VERSION }}.tar.gz"
-          mkdir tailscale
-          tar xf "${{ env.TAILSCALE_VERSION }}.tar.gz" --strip-components=1 -C tailscale
+          git clone https://github.com/tailscale/tailscale.git
           cd tailscale
+          git checkout "${{ env.TAILSCALE_VERSION }}"
           eval $(./build_dist.sh shellvars)
           echo "::set-output name=VERSION_LONG::${VERSION_LONG}"
           echo "::set-output name=VERSION_SHORT::${VERSION_SHORT}"
