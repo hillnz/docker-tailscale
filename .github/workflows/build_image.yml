@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Fetch tailscale code and read version
+      - name: Fetch tailscale code, read version, prepare Dockerfile
         id: get_tailscale
         run: |
           git clone https://github.com/tailscale/tailscale.git
@@ -43,6 +43,8 @@ jobs:
           echo "::set-output name=VERSION_LONG::${VERSION_LONG}"
           echo "::set-output name=VERSION_SHORT::${VERSION_SHORT}"
           echo "::set-output name=VERSION_GIT_HASH::${VERSION_GIT_HASH}"
+          cp ../entrypoint.sh ./
+          cat ../Dockerfile.entrypoint >>Dockerfile
 
       - name: Build and push
         id: docker_build
