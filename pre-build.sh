@@ -4,7 +4,7 @@ set -e
 
 git clone https://github.com/tailscale/tailscale.git
 cd tailscale
-git checkout "${{ env.TAILSCALE_VERSION }}"
+git checkout "$TAILSCALE_VERSION"
 eval $(./build_dist.sh shellvars)
 echo "::set-output name=VERSION_LONG::${VERSION_LONG}"
 echo "::set-output name=VERSION_SHORT::${VERSION_SHORT}"

@@ -35,6 +35,8 @@ jobs:
 
       - name: Fetch tailscale code, read version, prepare Dockerfile
         id: get_tailscale
+        env:
+          TAILSCALE_VERSION: ${{ env.TAILSCALE_VERSION }}
         run: ./pre-build.sh
 
       - name: Build and push
