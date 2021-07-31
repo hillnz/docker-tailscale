@@ -37,7 +37,7 @@ jobs:
         run: |
           wget "https://github.com/tailscale/tailscale/archive/refs/tags/${{ env.TAILSCALE_VERSION }}.tar.gz"
           mkdir tailscale
-          tar xvf --strip-components=1 -C tailscale "${{ env.TAILSCALE_VERSION }}.tar.gz"
+          tar xvf "${{ env.TAILSCALE_VERSION }}.tar.gz" --strip-components=1 -C tailscale
           cd tailscale
           eval $(./build_dist.sh shellvars)
           echo "::set-output name=VERSION_LONG::${VERSION_LONG}"
