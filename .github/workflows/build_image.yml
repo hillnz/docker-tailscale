@@ -56,7 +56,7 @@ jobs:
             VERSION_SHORT=${{ steps.get_tailscale.outputs.VERSION_SHORT }}
             VERSION_GIT_HASH=${{ steps.get_tailscale.outputs.VERSION_GIT_HASH }}
           push: ${{ github.ref == 'refs/heads/main' }}
-          tags: "${{ env.DOCKER_REPO }}:${{ env.TAILSCALE_VERSION }},${{ env.DOCKER_REPO }}:latest"
+          tags: "${{ env.DOCKER_REPO }}:${{ steps.get_tailscale.outputs.VERSION_SHORT }},${{ env.DOCKER_REPO }}:latest"
 
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v2
