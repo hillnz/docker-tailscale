@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+    tailscale:
+        image: jonoh/tailscale
+        volumes:
+            - ./data:/var/lib/tailscale
+        devices:
+            - /dev/net/tun:/dev/net/tun
+        network_mode: host
+        privileged: true
+        environment:
+            - AUTH_KEY=${SECRET_AUTH_KEY}
