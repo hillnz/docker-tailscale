@@ -1,0 +1,19 @@
+{
+    "extends": [
+      "config:base"
+    ],
+    "automerge": true,
+    "git-submodules": {
+      "enabled": true
+    },
+    "regexManagers": [
+      {
+        "fileMatch": ["^.github/workflows/build.sh$"],
+        "matchStrings": [
+          "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION: (?<currentValue>.*)\\s"
+        ],
+        "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+      }
+    ]
+  }
+  

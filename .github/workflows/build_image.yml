@@ -1,0 +1,67 @@
+name: build docker image
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+env:
+  # renovate: datasource=github-releases depName=tailscale/tailscale
+  TAILSCALE_VERSION: v1.12.1
+  DOCKER_REPO: jonoh/tailscale
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Fetch tailscale code and read version
+        run: |
+          wget "https://github.com/tailscale/tailscale/archive/refs/tags/${{ env.TAILSCALE_VERSION }}.tar.gz"
+          mkdir tailscale
+          tar xvf --strip-components=1 -C tailscale "${{ env.TAILSCALE_VERSION }}.tar.gz"
+          cd tailscale
+          eval $(./build_dist.sh shellvars)
+          echo "::set-output name=VERSION_LONG::${VERSION_LONG}"
+          echo "::set-output name=VERSION_SHORT::${VERSION_SHORT}"
+          echo "::set-output name=VERSION_GIT_HASH::${VERSION_GIT_HASH}"
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: tailscale
+          file: ./tailscale/Dockerfile
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          build-args: |
+            VERSION_LONG=${{ env.VERSION_LONG }}
+            VERSION_SHORT=${{ env.VERSION_SHORT }}
+            VERSION_GIT_HASH=${{ env.VERSION_GIT_HASH }}
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: "${{ env.DOCKER_REPO }}:${{ env.TAILSCALE_VERSION }},${{ env.DOCKER_REPO }}:latest"
+
+      - name: Update repo description
+        uses: peter-evans/dockerhub-description@v2
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: ${{ env.DOCKER_REPO }}
