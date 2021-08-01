@@ -7,7 +7,7 @@ dargs=false
 up_args=()
 d_args=()
 if [ "$AUTH_KEY" != "" ]; then
-    d_args=("--authkey" "$AUTH_KEY")
+    up_args=("--authkey" "$AUTH_KEY")
 fi
 for arg in "$@"; do
     if [ "$arg" = "--" ]; then
