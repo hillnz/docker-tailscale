@@ -1,18 +1,30 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-set -ef
+set -e
+
+# Parse args
+dargs=false
+up_args=()
+d_args=()
+if [ "$AUTH_KEY" != "" ]; then
+    d_args=("--authkey" "$AUTH_KEY")
+fi
+for arg in "$@"; do
+    if [ "$arg" = "--" ]; then
+        dargs=true
+    elif [ "$dargs" = "true" ]; then
+        d_args+=("$arg")
+    else
+        up_args+=("$arg")
+    fi
+done
 
 {
-    echo "Waiting for a moment before running 'up'..."
-    sleep 5
-    if [ "$AUTH_KEY" != "" ]; then
-        # shellcheck disable=SC2086
-        tailscale up --authkey "$AUTH_KEY" $UP_ARGS
-    elif [ "$UP_ARGS" != "" ]; then
-        # shellcheck disable=SC2086
-        tailscale up $UP_ARGS
+    if [ "${up_args[0]}" != "" ]; then
+        echo "Waiting for a moment before running 'up'..."
+        sleep 3
+        tailscale up "${up_args[@]}"
     fi
 } &
 
-# shellcheck disable=SC2086
-exec tailscaled $DAEMON_ARGS
+exec tailscaled "${d_args[@]}"

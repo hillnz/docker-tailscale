@@ -1,5 +1,7 @@
 
 # This isn't a complete Dockerfile. It gets concatenated to the official one.
+RUN apk add --no-cache bash
+
 COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]
