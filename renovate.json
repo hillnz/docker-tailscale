@@ -8,7 +8,7 @@
     },
     "regexManagers": [
       {
-        "fileMatch": ["^.github/workflows/build.sh$"],
+        "fileMatch": ["^.github/workflows/build_image.yml$"],
         "matchStrings": [
           "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_VERSION: (?<currentValue>.*)\\s"
         ],
