@@ -54,7 +54,7 @@ jobs:
           tags: "${{ env.DOCKER_REPO }}:${{ steps.get_tailscale.outputs.VERSION_SHORT }},${{ env.DOCKER_REPO }}:latest"
 
       - name: Update repo description
-        uses: peter-evans/dockerhub-description@v3
+        uses: peter-evans/dockerhub-description@v4
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
