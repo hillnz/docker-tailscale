@@ -10,7 +10,7 @@ on:
 
 env:
   # renovate: datasource=github-releases depName=tailscale/tailscale
-  TAILSCALE_VERSION: v1.68.2
+  TAILSCALE_VERSION: v1.70.0
   DOCKER_REPO: jonoh/tailscale
 
 jobs:
